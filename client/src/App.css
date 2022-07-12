@@ -1,0 +1,43 @@
+.App {
+  text-align: center;
+}
+
+*{
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  
+}
+
+.myHome {
+  background-image: url("../public/bg.png");
+  height: 100vh;
+  margin-top: -40px;
+  margin-left: -15px;
+}
+
+/* 
+img {
+  opacity: 0.1;
+} */
+
+.myTomato {
+  background-image: url("../public/tomato.png");
+  background-size: cover;  
+  height: 100vh;
+  /* margin-top: -40px; */
+}
+
+.myPotato {
+  background-image: url("../public/potato.png");
+  background-size: cover;  
+  height: 100vh;
+  /* margin-top: -40px; */
+}
+
+.myPepper {
+  background-image: url("../public/pepper.png");
+  background-size: cover;  
+  height: 100vh;
+  /* margin-top: -40px; */
+}
