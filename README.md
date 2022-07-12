@@ -4,26 +4,26 @@ An end to end responsive social media platform, that supports uploading posts, l
 
 ## Hosted at
 
-To visit the website click [here](https://tdiaries.netlify.app/)
+To visit the website click [here](https://drplant.netlify.app/)
 
 ## To clone the repository.
 
 ```bash
-$ git clone https://github.com/cAmartya/tDiaries.git
+$ git clone https://github.com/cAmartya/DrPlant.git
 ```
 
-## To install the app with [npm](https://www.npmjs.com/)
+## To install the app 
 
-frontend setup
+frontend setup with [npm](https://www.npmjs.com/)
 ```bash
   cd client
   npm i
 ```
 
-backend setup
+backend setup with [pip](https://pypi.org/project/pip/)
 ```bash
   cd server
-  npm i
+  pip3 install -r requirements.txt
 ```
 
 
@@ -31,7 +31,7 @@ backend setup
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`MONGO_URL`, `GOOGLE_CLIENT_ID`, `SERVER_PORT` 
+ `SERVER_PORT` 
 
 ## To Run the app
 
@@ -39,7 +39,7 @@ run the backend
 
 ```bash
   cd server
-  npm run start
+  uvicorn index:app --reload --host 0.0.0.0
 ```
 
 run the frontend
@@ -58,10 +58,7 @@ Screenshots                  |  Screenshots
 
 ## Roadmap
 
-- Adding chat support
-- Migrating to nextjs to use SSG and other optimizations, to enhance the website.
-- Adding notifications, followers of an user.
-
+- Replace FastAPI server with NodeJS
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
