@@ -6,6 +6,10 @@ from io import BytesIO
 from PIL import Image
 import tensorflow as tf
 
+# will be using tflite-runtime...
+# %pip install tflite-runtime
+# import tflite_runtime.interpreter as tflite
+
 app = FastAPI()
 
 model_dir = "saved_models"
@@ -32,20 +36,26 @@ def read_file_as_image(data) -> np.ndarray:
     return image
 
 @app.post("/api/potato")
-async def predict(file: UploadFile = File(...)):
-    
-    image = read_file_as_image(await file.read())
-    img_batch = np.expand_dims(image, 0)
-
-    MODEL = tf.keras.models.load_model(f"{model_dir}/potato_2")
+async def predict(file: UploadFile = File(...)):    
 
     CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
+    image = read_file_as_image(await file.read())
+    test_image = np.expand_dims(image, 0).astype(np.float32)
+
+    interpreter = tf.lite.Interpreter(model_path=f"{model_dir}/lite/potato_2.tflite")
+    # interpreter = tflite.Interpreter(model_path=f"{model_dir}/lite/potato_2.tflite")
+    interpreter.allocate_tensors()
+    input_index = interpreter.get_input_details()[0]["index"]
+    output_index = interpreter.get_output_details()[0]["index"]
+
+    interpreter.set_tensor(input_index, test_image)
+    interpreter.invoke()
+    output = interpreter.tensor(output_index)
     
-    predictions = MODEL.predict(img_batch)
-    
-    predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
-    confidence = np.max(predictions[0])
+    predicted_class = CLASS_NAMES[np.argmax(output()[0])]
+    confidence = np.max(output()[0])
+
     return {
         'class': predicted_class,
         'confidence': float(confidence)
@@ -54,41 +64,50 @@ async def predict(file: UploadFile = File(...)):
 @app.post("/api/tomato")
 async def predict(file: UploadFile = File(...)):
 
-    image = read_file_as_image(await file.read())
-    img_batch = np.expand_dims(image, 0)
-
-    MODEL = tf.keras.models.load_model(f"{model_dir}/tomato_2")
-
     CLASS_NAMES = ["Early Blight", "Late Blight", "Septoria leaf spot", "Target Spot", "Healthy"]
 
+    image = read_file_as_image(await file.read())
+    test_image = np.expand_dims(image, 0).astype(np.float32)
+
+    interpreter = tf.lite.Interpreter(model_path=f"{model_dir}/lite/tomato_2.tflite")
+    # interpreter = tflite.Interpreter(model_path=f"{model_dir}/lite/tomato_2.tflite")
+    interpreter.allocate_tensors()
+    input_index = interpreter.get_input_details()[0]["index"]
+    output_index = interpreter.get_output_details()[0]["index"]
+
+    interpreter.set_tensor(input_index, test_image)
+    interpreter.invoke()
+    output = interpreter.tensor(output_index)
     
-    predictions = MODEL.predict(img_batch)
-    print(predictions[0])
-
-
-    predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
-    confidence = np.max(predictions[0])
+    predicted_class = CLASS_NAMES[np.argmax(output()[0])]
+    confidence = np.max(output()[0])
+    
     return {
         'class': predicted_class,
-        'confidence': float(confidence),
-        'classIndex': float(np.argmax(predictions[0]))
+        'confidence': float(confidence)
     }
 
 @app.post("/api/pepper")
 async def predict(file: UploadFile = File(...)):
 
-    image = read_file_as_image(await file.read())
-    img_batch = np.expand_dims(image, 0)
-
-    MODEL = tf.keras.models.load_model(f"{model_dir}/pepper_2")
-
     CLASS_NAMES = ['BacterialSpot', 'Healthy']
 
-    
-    predictions = MODEL.predict(img_batch)
+    image = read_file_as_image(await file.read())
+    test_image = np.expand_dims(image, 0).astype(np.float32)
 
-    predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
-    confidence = np.max(predictions[0])
+    interpreter = tf.lite.Interpreter(model_path=f"{model_dir}/lite/pepper_2.tflite")
+    # interpreter = tflite.Interpreter(model_path=f"{model_dir}/lite/pepper_2.tflite")
+    interpreter.allocate_tensors()
+    input_index = interpreter.get_input_details()[0]["index"]
+    output_index = interpreter.get_output_details()[0]["index"]
+
+    interpreter.set_tensor(input_index, test_image)
+    interpreter.invoke()
+    output = interpreter.tensor(output_index)
+    
+    predicted_class = CLASS_NAMES[np.argmax(output()[0])]
+    confidence = np.max(output()[0])
+    
     return {
         'class': predicted_class,
         'confidence': float(confidence)
